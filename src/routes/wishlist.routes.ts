@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   addWishlistItem,
   // getWishlist,
-} from "../controllers/wishlist.controller";
+} from "../controllers/wishlistController";
 
 const router = Router();
 

@@ -14,17 +14,17 @@ datasource db {
 }
 model Customer {
   id        Int            @id @default(autoincrement())
-  shopifyId String?        @unique
+  shopifyId String         @unique
   email     String?        @unique
   phone     String?        @unique
   name      String?
   createdAt DateTime       @default(now())
-  wishlist  WishlistItem[]
+  wishlist  WishlistItem[] @relation("CustomerWishlist")
 }
 
 model WishlistItem {
   id            Int      @id @default(autoincrement())
-  customerId    Int
+  customerId    String
   productId     String
   variantId     String?
   productTitle  String
@@ -33,5 +33,5 @@ model WishlistItem {
   productPrice  Float?
   createdAt     DateTime @default(now())
 
-  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customer Customer @relation("CustomerWishlist", fields: [customerId], references: [shopifyId], onDelete: Cascade)
 }
