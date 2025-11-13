@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import wishlistRoutes from "./routes/wishlist.routes";
 import authRoutes from "./routes/auth.routes";
-
+import adminSettingRoutes from "./routes/adminSetting.routes";
 dotenv.config();
 
 const app = express();
@@ -13,6 +13,7 @@ app.use(express.json());
 
 app.use(`/${baseUrl}/wishlist`, wishlistRoutes);
 app.use(`/${baseUrl}/auth`, authRoutes);
+app.use(`/${baseUrl}/settings`, adminSettingRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.get("/", (_, res) => {

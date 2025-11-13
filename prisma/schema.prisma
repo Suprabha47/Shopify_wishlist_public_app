@@ -14,31 +14,65 @@ datasource db {
 }
 
 model Shop {
-  id              Int             @id @default(autoincrement())
-  shopifyDomain   String          @unique
-  accessToken     String
-  isActive        Boolean         @default(true)
-  installedAt     DateTime        @default(now())
-  uninstalledAt   DateTime?
+  id            Int       @id @default(autoincrement())
+  shopifyDomain String    @unique
+  accessToken   String
+  isActive      Boolean   @default(true)
+  installedAt   DateTime  @default(now())
+  uninstalledAt DateTime?
 
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  customers       Customer[]      @relation("ShopCustomers")
-  wishlistItems   WishlistItem[]  @relation("ShopWishlistItems")
+  customers     Customer[]     @relation("ShopCustomers")
+  wishlistItems WishlistItem[] @relation("ShopWishlistItems")
+  settings      ShopSettings?
+}
+
+model ShopSettings {
+  id     Int  @id @default(autoincrement())
+  shopId Int  @unique
+  shop   Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  buttonColor       String?
+  textColor         String?
+  iconFillColor     String?
+  iconStyle         String?
+  showWishlistCount Boolean? @default(true)
+  backgroundColor   String?
+
+  productIconColor      String?
+  productIconFillColor  String?
+  productShpwIcon       Boolean? @default(true)
+  productButtonText     String?
+  productButtonPosition String?
+  ProductButtonStyle    String?
+  ProductbuttonLabel    String?
+
+  collectionIconColor      String?
+  collectionIconFillColor  String?
+  collectionShowIcon       Boolean? @default(true)
+  collectionButtonPosition String?
+
+  wishlistLayoutType String?
+  showPrice          Boolean? @default(true)
+  showStock          Boolean? @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Customer {
-  id        Int            @id @default(autoincrement())
-  shopifyId String         @unique
-  email     String?        
-  phone     String?        
+  id        Int      @id @default(autoincrement())
+  shopifyId String   @unique
+  email     String?
+  phone     String?
   name      String?
-  createdAt DateTime       @default(now())
-  shopId    Int     
-          
-  shop      Shop           @relation("ShopCustomers", fields: [shopId], references: [id], onDelete: Cascade)
-  wishlist  WishlistItem[] @relation("CustomerWishlist")
+  createdAt DateTime @default(now())
+  shopId    Int
+
+  shop     Shop           @relation("ShopCustomers", fields: [shopId], references: [id], onDelete: Cascade)
+  wishlist WishlistItem[] @relation("CustomerWishlist")
 
   @@unique([shopId, shopifyId])
   @@unique([shopId, email])
@@ -56,7 +90,7 @@ model WishlistItem {
   productPrice  Float?
   createdAt     DateTime @default(now())
 
-  shopId        Int
-  shop          Shop     @relation("ShopWishlistItems", fields: [shopId], references : [id], onDelete: Cascade)
+  shopId   Int
+  shop     Shop     @relation("ShopWishlistItems", fields: [shopId], references: [id], onDelete: Cascade)
   customer Customer @relation("CustomerWishlist", fields: [customerId], references: [shopifyId], onDelete: Cascade)
 }
